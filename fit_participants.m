@@ -21,13 +21,13 @@ ntrials = NaN(n, 1); param = NaN(n, nmodels, 4); err = NaN(n, nmodels);
 
 %% Preprocessing data and model fitting for each participant i
 for i = 1:n
-    disp("Participant "+int2str(i))
-    
+    disp("Participant " + int2str(i))
+
     file = task_data{i};
     % Getting relevant data for the on scale responses.
     % probs = [prior, likelihood, confidence], rts = reaction times in sec
     [probs, rts] = get_probabilities(file);
-    
+
     ntrials(i) = size(probs, 1);
 
     % Used for fit_lme.
@@ -40,6 +40,7 @@ for i = 1:n
 
     for k = 1:nmodels
         % params = [alpha_p, alpha_l, wp, wl] for ci, nr
-        [param(i,k,:), err(i,k)] = fit_models(probs, models(k), nfit, neval);
+        [param(i, k, :), err(i, k)] = fit_models(probs, models(k), nfit, neval);
     end
+
 end
