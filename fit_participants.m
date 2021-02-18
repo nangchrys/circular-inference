@@ -17,18 +17,18 @@ function [params, modelErrors] = fit_participants(Participants, Options)
     nFits = Options.nFits; maxEvals = Options.maxEvals;
 
     nModels = length(fitModels); nParticipants = length(Participants);
-    params = NaN(nParticipants, nModels, 4);
-    modelErrors = NaN(nParticipants, nModels);
+    params = struct; modelErrors = struct;
 
     for i = 1:nParticipants
         disp("Participant " + int2str(i))
-        probs = Participant(i).probs;        
+        probs = Participants(i).probs;        
 
         for k = 1:nModels
             modelOptions = {char(fitModels(k)), regLambda};
             % prm = [ap, al, wp, wl] for cir, cinr
             [prm, err] = fit_model(probs, modelOptions, nFits, maxEvals);
-            params(i, k, :) = prm; modelErrors(i, k) = err;
+            params.(fitModels(k))(i, :) = prm;
+            modelErrors.(fitModels(k))(i) = err;
         end
     end
 

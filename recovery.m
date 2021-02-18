@@ -1,4 +1,4 @@
-function [Measures, AllParams] = recovery(Options, originalParams, originalErrors)
+function [Measures, AllParams] = recovery(OriginalParams, OriginalErrors, Options)
     % Runs parameter and models recovery for cir and cinr
     % Inputs
     %   Options:        recovery options, see master.m
@@ -40,8 +40,8 @@ function [Measures, AllParams] = recovery(Options, originalParams, originalError
         RecoveredParams = struct(models, NaN(nSimulations, 4));
     end
 
-    nOriginal = size(originalErrors, 1);
-    correlations = NaN(nModels, 4); pvalues = NaN(nModels, 4);
+    nOriginal = size(OriginalErrors, 1);
+    correlation = NaN(nModels, 4); pvalue = NaN(nModels, 4);
     
     % creates the trial set used in the study
     PRIORS = []; LIKELIHOODS = [];
@@ -54,8 +54,8 @@ function [Measures, AllParams] = recovery(Options, originalParams, originalError
                 LIKELIHOODS = [LIKELIHOODS; l];
                 
                 % certain trials are repeated
-                if ismember(i, [0.3, 0.4, 0.6, 0.7]) || ...
-                            ismember(j, [0.3, 0.4, 0.6, 0.7])
+                if ismember(p, [0.3, 0.4, 0.6, 0.7]) || ...
+                            ismember(l, [0.3, 0.4, 0.6, 0.7])
                     PRIORS = [PRIORS; p];
                     LIKELIHOODS = [LIKELIHOODS; l];
                 end
@@ -73,8 +73,8 @@ function [Measures, AllParams] = recovery(Options, originalParams, originalError
                 disp("Model: " + models(j) + ", participant: " + int2str(i))
             end
 
-            jOriginalParams = squeeze(originalParams(:, j, :));
-            jOriginalErrors = squeeze(originalErrors(:, j, :));
+            jOriginalParams = OriginalParams.(models(j));
+            jOriginalErrors = OriginalErrors.(models(j));
             
             % gets 4 random parameters
             idx = sub2ind(size(jOriginalParams), randi(nOriginal, 1, 4), 1:4);
@@ -106,18 +106,18 @@ function [Measures, AllParams] = recovery(Options, originalParams, originalError
             % estimate parameters with input models
             if nModels == 2
                 cirOptions = {'cir', regLambda};
-                [prm(1, :), err] = fit_models(probs, cirOptions, nFits, maxEvals);
+                [prm(1, :), err] = fit_model(probs, cirOptions, nFits, maxEvals);
                 Bic.(models(j))(i, 1) = gaussian_bic(err, nTrials, 4);
 
                 cinrOptions = {'cinr', regLambda};
-                [prm(2, :), err] = fit_models(probs, cinrOptions, nFits, maxEvals);
+                [prm(2, :), err] = fit_model(probs, cinrOptions, nFits, maxEvals);
                 Bic.(models(j))(i, 2) = gaussian_bic(err, nTrials, 4);
                 
                 RecoveredParams.(models(j))(i, :) = prm(j, :);
 
             else
                 modelOptions = {char(model), regLambda};
-                [prm, ~] = fit_models(probs, modelOptions, nFits, maxEvals);
+                [prm, ~] = fit_model(probs, modelOptions, nFits, maxEvals);
                 RecoveredParams.(models)(i, :) = prm(j, :);
             end
 
@@ -126,8 +126,8 @@ function [Measures, AllParams] = recovery(Options, originalParams, originalError
         for k = 1:4 % calculates Pearson correlations
             [r, p] = corrcoef(SimulatedParams.(models(j))(:, k), ...
                          RecoveredParams.(models(j))(:, k));
-            correlations(j, k) = r(1, 2);
-            pvalues(j, k) = p;
+            correlation(j, k) = r(1, 2);
+            pvalue(j, k) = p(1, 2);
         end
 
     end
@@ -147,7 +147,7 @@ function [Measures, AllParams] = recovery(Options, originalParams, originalError
         confusion = [];
     end
     
-    Measures = struct('correlation', correlations, 'pvalue', pvalue, ...
+    Measures = struct('correlation', correlation, 'pvalue', pvalue, ...
                       'confusion', confusion);
     AllParams = struct('simulated', SimulatedParams, ...
                        'recovered', RecoveredParams);

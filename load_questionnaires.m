@@ -33,7 +33,7 @@ function Scores = load_questionnaires(folder, subsample)
                 'pdi', zeros(n, 4), ...       % PDI [Y/N, distr, preocc, conv]
                 'durationSec', NaN(n, 1), ...  % questionnaire duration
                 'attention', NaN(n, 1), ... % succesful att. checks out of 2
-                'ids', strings(n ,1));     % participsnt IDs
+                'id', strings(n ,1));     % participsnt IDs
 
     for row = first:last % iterates over chosen subsample participants
         k = row - first + 1; % index of loaded data
@@ -82,7 +82,7 @@ function Scores = load_questionnaires(folder, subsample)
 
         Scores.durationSec(k) = answers{row, 'Duration'};
         Scores.attention(k) = answers{row, 'Attention'};
-        Scores.ids(k) = string(answers{row, 'ID'});
+        Scores.id(k) = string(answers{row, 'ID'});
     end
     
 end

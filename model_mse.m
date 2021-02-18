@@ -15,7 +15,7 @@ function mse = model_mse(probs, modelOptions, param)
     % Outputs
     %   mse:            mean squared error
     
-    model = modelOptions{1}; regularisationTerm = modelOptions{2};
+    model = modelOptions{1}; regLambda = modelOptions{2};
     prior = probs(:, 1); likelihood = probs(:, 2); confidence = probs(:, 3);
     param = num2cell(expit(param));
     
@@ -27,7 +27,7 @@ function mse = model_mse(probs, modelOptions, param)
         otherwise % Circular Inference
             [ap, al, wp, wl] = param{:};
     end
-    regularisationPenalty = regularisationTerm * (ap^2 + al^2);
+    regularisationPenalty = regLambda * (ap^2 + al^2);
     
     % Gets predictions from each model, given parameter values.
     if strcmp(model, 'cir')

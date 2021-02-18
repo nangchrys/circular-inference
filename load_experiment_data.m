@@ -31,7 +31,7 @@ function [Participants, Scores, AllData] = load_experiment_data(folder, subsampl
     nParticipants = length(filelist);
 
     for i = 1:nParticipants
-        filename = strcat(Scores.ids(i), '.csv');
+        filename = strcat(Scores.id(i), '.csv');
         file = readtable(fullfile(folder, 'accepted', filename));
         % get table with positions of the mouse, names of the leftLake file
         % (has prior & likelihood information), reaction times, break times
@@ -43,7 +43,7 @@ function [Participants, Scores, AllData] = load_experiment_data(folder, subsampl
 
         nTrials = size(probs, 1);
 
-        AllData.id = [AllData.id; Scores.id(i) * ones(nTrials, 1)];
+        AllData.id = [AllData.id; i * ones(nTrials, 1)];
         AllData.aq = [AllData.aq; Scores.aq(i) * ones(nTrials, 1)];
         AllData.pdi = [AllData.pdi; Scores.pdi(i, 1) * ones(nTrials, 1)];
         AllData.reactionTimes = [AllData.reactionTimes; reactionTimes];

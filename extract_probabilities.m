@@ -27,7 +27,8 @@ function [probs, reactionTimes] = extract_probabilities(rawData)
 
     % Selecting good trials and adjusting for non-circularity.
     angles = angles(goodTrials) .* (90/94);
-
+    reactionTimes = reactionTimes(goodTrials);
+    
     % Getting prior and likelihood values from lake filenames.
     prior = str2num(lakenames(goodTrials, 15:16)) / 100;
     likelihood = str2num(lakenames(goodTrials, 17:18)) / 100;

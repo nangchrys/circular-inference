@@ -2,11 +2,11 @@ function [bestParam, minError] = fit_model(probs, modelOptions, nFits, maxEvals)
     % Fits models by minimising mean squared error.
     % Equivalent to least squares.
     
-    model = modelOptions{1}; regularisationTerm = modelOptions{2};
+    model = modelOptions{1}; regLambda = modelOptions{2};
     
     if strcmp(model, 'sb')
-        bestParam = []; % Simple Bayes doesn't have any free parameters.
-        minError = model_mse(probs, model, []);
+        bestParam = NaN; % Simple Bayes doesn't have any free parameters.
+        minError = model_mse(probs, modelOptions, []);
 
     else
         if strcmp(model, 'wb')
@@ -33,8 +33,8 @@ function [bestParam, minError] = fit_model(probs, modelOptions, nFits, maxEvals)
             bestParam = expit(param(bestIdx, :));
 
             % remove regularisation adjustment from error
-            minError = minError - regularisationTerm * bestParam(1)^2 - ...
-                                  regularisationTerm * bestParam(2)^2;
+            minError = minError - regLambda * bestParam(1)^2 - ...
+                                  regLambda * bestParam(2)^2;
         end
     end
 
