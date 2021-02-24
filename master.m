@@ -20,27 +20,28 @@
 %   subsample:      determines the subsample of participants for
 %                   data loading and model fitting. HAS TO BE CHAR TYPE.
 %                   choose from 'all', 'prolific', and 'social'.
-%   folder:         the path for 
+%   datapath:       the filepath of the data folder
 
 warning('OFF', 'MATLAB:table:ModifiedAndSavedVarnames')
 
-Options = struct('fitModels', ["sb", "wb", "cir", "cinr"], ...
+Options = struct('fitModels', ["cir", "cinr"], ...
                  'recModels', ["cir", "cinr"], ...
                  'regLambda', 0.00005, ...
-                 'nFits', 2, ...
-                 'maxEvals', 10, ...
-                 'nSimulations', 50);
+                 'nFits', 100, ...
+                 'maxEvals', 10000, ...
+                 'nSimulations', 1000);
  
-folder = 'data'; subsample = 'all';
+datapath = 'data'; %CHANGE THAT TO THE DATA FOLDER
+subsample = 'all';
 
 %% Load data
-[Participants, Scores, AllData] = load_experiment_data(folder, subsample);
+[Participants, Scores, AllData] = load_experiment_data(datapath, subsample);
 
 %% Fit LME
 lme = fit_lme(AllData);
 
 %% Fit Bayesian models
-[params, modelErrors] = fit_participants(Participants, Options);
+[Params, ModelErrors] = fit_participants(Participants, Options);
 
 %% Do parameter and model recovery
 originalParams = params; originalErrors = modelErrors;

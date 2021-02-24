@@ -5,32 +5,35 @@ Analysis code for Angeletos Chrysaitis et al. 2021
 
 ## Index
 
-file | description 
-:--- | :---
-ci_prediction | predict CI
-discarded_plots | discards plots
-logit | helper function, calculates $ log (\frac(x)(1-x)) $
+file                    | description 
 
-## How to install
+master                  | master file: runs all top level scripts (those denoted by * below)
+load_questionnaire_data | extracts data from questionnaires.csv
+load_experiment_data    | loads questionnaire and task data
+fit_lme                 | fits the linear mixed-effects model for absolute confidence
+fit_model               | fits a Bayesian model to a participant's data
+fit_participants        | uses fit_model on the chosen subsample for the chosen models
+recover                 | performs parameter and model recovery for CIR and CINR
+cinr_prediction         | calculates CINR prediction
+cir_prediction          | calculates CIR prediction
+model_mse               | calculates the mean squared error of a Bayesian model
+gaussian_bic            | calculates BIC scores assuming Gaussian noise
 
-Make sure you have matlab vXYZ
+restrict_probability    | helper function, restricts probabilities to [0.01, 0.99]
+logit                   | helper function, calculates $ log (\frac(x)(1-x)) $
+expit                   | helper function, calculates $ 1 / (1 + exp(x)) $
+signtol                 | helper function, calculates the sign of a number with tolerance
 
-1. `git clone https://github.com/nangchrys/circular-inference`
-2. `cd circular-inference`
-3. `???? MATLAB FILES ` 
 
+## Instructions
 
-## Plots
-<insert plots>
+Created in Matlab 2020a, but should work in most earlier versions with no problems
 
-## How to run
+1. clone https://github.com/nangchrys/circular-inference
+2. open master.m
+3. change variable "datapath" to the filepath for the data folder
+4. run any and all of the 4 scripts
 
-## Input file template/questionnaire
- <Fill>
 
 ## Acknowledgements
-University of Edinburgh, XXX Department
-
-Formatted in VSCode [matlab-formatter](https://marketplace.visualstudio.com/items?itemName=AffenWiesel.matlab-formatter)
-
-
+CDT Biomedical AI, School of Informatics, University of Edinburgh
