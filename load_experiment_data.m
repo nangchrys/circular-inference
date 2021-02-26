@@ -19,11 +19,11 @@ function [Participants, Scores, AllData] = load_experiment_data(folder, subsampl
     % get the filelist corresponding to the chosen (sub)sample
     switch subsample
         case 'all'
-            filelist = dir(fullfile(folder, 'accepted\*.csv'));
+            filelist = dir(fullfile(folder, 'accepted', '*.csv'));
         case 'prolific'
-            filelist = dir(fullfile(folder, 'accepted\p*.csv'));
+            filelist = dir(fullfile(folder, 'accepted', 'p*.csv'));
         case 'social'
-            filelist = dir(fullfile(folder, 'accepted\s*.csv'));
+            filelist = dir(fullfile(folder, 'accepted', 's*.csv'));
     end
     
     AllData = struct('aq', [], 'pdi', [], 'reactionTimes', [], ...
